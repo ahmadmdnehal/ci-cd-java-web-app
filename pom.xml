@@ -7,8 +7,8 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.5</version>
-    <relativePath/>
+    <version>2.7.18</version>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>com.tomact</groupId>
@@ -17,27 +17,41 @@
   <packaging>war</packaging>
 
   <name>tomcat</name>
-  <description>Demo project for Spring Boot</description>
+  <description>Demo project for Spring Boot (2.7) on Tomcat 9</description>
 
   <properties>
-    <java.version>21</java.version>
+    <java.version>17</java.version>
+    <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
   </properties>
 
   <dependencies>
-    <!-- standard web starter for Spring Boot 3 -->
+    <!-- Spring Web (uses javax.* on SB 2.7) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- use external Tomcat (provided) -->
+    <!-- Use container's Tomcat (mark embedded as provided) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-tomcat</artifactId>
       <scope>provided</scope>
     </dependency>
 
-    <!-- test starter -->
+    <!-- Optional: jsp support if you use JSP -->
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Optional: JSTL if you use JSP pages -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+    </dependency>
+
+    <!-- Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -49,11 +63,11 @@
     <finalName>tomcat</finalName>
 
     <plugins>
-      <!-- ensure Java compile level -->
+      <!-- Compiler plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
@@ -61,9 +75,15 @@
         </configuration>
       </plugin>
 
+      <!-- Spring Boot plugin (for repackage if needed) -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.7.18</version>
+        <configuration>
+          <!-- For WAR packaging we usually don't want an executable jar -->
+          <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
   </build>
